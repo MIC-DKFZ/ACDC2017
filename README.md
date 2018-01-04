@@ -86,4 +86,4 @@ The predicted test set will be saved in OUTPUT_FOLDER
 
 ## Contact
 If you wish to contact us regarding problems, questions or suggestions, please write an email to either 
-Fabian (<mailto:f.isensee@dkfz.de>) or Paul (<mailto:p.jaeger@dkfz.de>)
+Fabian (f.isensee@dkfz.de) or Paul (p.jaeger@dkfz.de)
