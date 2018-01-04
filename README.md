@@ -44,7 +44,7 @@ OUTPUT_FOLDER_FOR_2D_DATA: Where to save training data for 2d network
 OUTPUT_FOLDER_FOR_3D_DATA: Where to save training data for 3d network
 
 ### Training the networks
-First go into the ```UNet2D_config.py``` and ```UNet2D_config.py``` and adapt all the paths to match your file system and the 
+First go into the `UNet2D_config.py` and `UNet2D_config.py` and adapt all the paths to match your file system and the 
 download locations of training and test sets.
 
 Training the networks requires a GPU with at least 12 GB of VRAM. On a Pascal Titan X, a 2D UNet trains in < 1d and a 
@@ -86,4 +86,4 @@ The predicted test set will be saved in OUTPUT_FOLDER
 
 ## Contact
 If you wish to contact us regarding problems, questions or suggestions, please write an email to either 
-Fabian (f.isensee@dkfz.de) or Paul (p.jaeger@dkfz.de)
+Fabian (mailto:f.isensee@dkfz.de) or Paul (mailto:p.jaeger@dkfz.de)
