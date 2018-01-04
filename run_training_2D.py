@@ -19,10 +19,9 @@ import lasagne
 import theano.tensor as T
 import numpy as np
 import theano
-import sys
 import os
 import cPickle
-from utils import printLosses
+from utils import plotProgress
 import time
 from utils import soft_dice, hard_dice
 from BatchGenerator import BatchGenerator_2D
@@ -142,7 +141,6 @@ def run(config_file, fold=0):
     # create a convenience function to get the segmentation
     seg_output = lasagne.layers.get_output(seg_layer, x_sym, deterministic=True, batch_norm_update_averages=False,
                                            batch_norm_use_averages=False)
-    seg_output = seg_output.argmax(1)
 
     dc = hard_dice(prediction_test, seg_sym.argmax(1), num_classes)
 
@@ -150,7 +148,7 @@ def run(config_file, fold=0):
     val_fn = theano.function([x_sym, seg_sym], [loss_val, acc, dc])
     # get_class_probas = theano.function([x_sym], prediction_test)
 
-    auc_scores=None
+    dice_scores=None
     data_gen_train = create_data_gen_train(train_data, BATCH_SIZE,
                                            num_classes, num_workers=num_workers,
                                            do_elastic_transform=True, alpha=(100., 350.), sigma=(14., 17.),
@@ -163,7 +161,7 @@ def run(config_file, fold=0):
     all_validation_losses = []
     all_validation_accuracies = []
     all_training_accuracies = []
-    auc_all = []
+    all_val_dice_scores = []
     epoch = 0
 
 
@@ -204,11 +202,11 @@ def run(config_file, fold=0):
                 all_training_accuracies.append(train_acc_tmp/np.floor(n_batches_per_epoch/(n_feedbacks_per_epoch-1)))
                 train_loss_tmp = 0
                 train_acc_tmp = 0
-                if len(auc_all) > 0:
-                    auc_scores = np.concatenate(auc_all, axis=0).reshape((-1, num_classes))
-                printLosses(all_training_losses, all_training_accuracies, all_validation_losses,
-                            all_validation_accuracies, os.path.join(results_dir, "%s.png" % EXPERIMENT_NAME),
-                            n_feedbacks_per_epoch, auc_scores=auc_scores, auc_labels=["brain", "1", "2", "3", "4", "5"])
+                if len(all_val_dice_scores) > 0:
+                    dice_scores = np.concatenate(all_val_dice_scores, axis=0).reshape((-1, num_classes))
+                plotProgress(all_training_losses, all_training_accuracies, all_validation_losses,
+                             all_validation_accuracies, os.path.join(results_dir, "%s.png" % EXPERIMENT_NAME),
+                             n_feedbacks_per_epoch, val_dice_scores=dice_scores, dice_labels=["brain", "1", "2", "3", "4", "5"])
             loss_vec, acc, l = train_fn(data, seg)
 
             loss = loss_vec.mean()
@@ -248,28 +246,19 @@ def run(config_file, fold=0):
         print "val acc: ", np.mean(accuracies), "\n"
         print "val dice: ", dice_means
         print "This epoch took %f sec" % (time.time()-epoch_start_time)
-        auc_all.append(dice_means)
+        all_val_dice_scores.append(dice_means)
         all_validation_losses.append(val_loss)
         all_validation_accuracies.append(np.mean(accuracies))
-        auc_scores = np.concatenate(auc_all, axis=0).reshape((-1, num_classes))
-        printLosses(all_training_losses, all_training_accuracies, all_validation_losses, all_validation_accuracies,
-                    os.path.join(results_dir, "%s.png" % EXPERIMENT_NAME), n_feedbacks_per_epoch, auc_scores=auc_scores,
-                    auc_labels=["brain", "1", "2", "3", "4", "5"])
+        dice_scores = np.concatenate(all_val_dice_scores, axis=0).reshape((-1, num_classes))
+        plotProgress(all_training_losses, all_training_accuracies, all_validation_losses, all_validation_accuracies,
+                     os.path.join(results_dir, "%s.png" % EXPERIMENT_NAME), n_feedbacks_per_epoch, val_dice_scores=dice_scores,
+                     dice_labels=["brain", "1", "2", "3", "4", "5"])
         with open(os.path.join(results_dir, "%s_Params.pkl" % (EXPERIMENT_NAME)), 'w') as f:
             cPickle.dump(lasagne.layers.get_all_param_values(output_layer_for_loss), f)
         with open(os.path.join(results_dir, "%s_allLossesNAccur.pkl"% (EXPERIMENT_NAME)), 'w') as f:
             cPickle.dump([all_training_losses, all_training_accuracies, all_validation_losses,
-                          all_validation_accuracies, auc_all], f)
+                          all_validation_accuracies, all_val_dice_scores], f)
         epoch += 1
-
-
-    from NeuralNetworks.custom_layers import TransposedConv3DLayer, DilatedConv3DLayer
-    from lasagne.layers import Upscale3DLayer, ElemwiseSumLayer, ConcatLayer
-    from Utils.utils_plotting import plot_all_layer_activations
-    plot_all_layer_activations(output_layer_for_loss, data, output_folder=results_dir,
-                               plot_these_layer_types=[Upscale3DLayer, DilatedConv3DLayer, ElemwiseSumLayer,
-                                                       ConcatLayer], batch_norm_update_averages=False,
-                               batch_norm_use_averages=False)
 
 
 if __name__ == "__main__":

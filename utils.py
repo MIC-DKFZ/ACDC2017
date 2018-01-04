@@ -239,8 +239,8 @@ def hard_dice(y_pred, y_true, n_classes):
     return dice
 
 
-def printLosses(all_training_losses, all_training_accs, all_validation_losses, all_valid_accur, fname,
-                samplesPerEpoch=10, auc_scores=None, auc_labels=None, ylim_score=None):
+def plotProgress(all_training_losses, all_training_accs, all_validation_losses, all_valid_accur, fname,
+                 samplesPerEpoch=10, val_dice_scores=None, dice_labels=None, ylim_score=None):
     fig, ax1 = plt.subplots(figsize=(16, 12))
     trainLoss_x_values = np.arange(1/float(samplesPerEpoch), len(all_training_losses)/float(samplesPerEpoch)+0.000001,
                                    1/float(samplesPerEpoch))
@@ -263,12 +263,12 @@ def printLosses(all_training_losses, all_training_accs, all_validation_losses, a
         t2.set_color('r')
     ax2_legend_text = ['trainAcc', 'validAcc']
 
-    if auc_scores is not None:
-        assert len(auc_scores) == len(all_validation_losses)
-        num_auc_scores_per_timestep = auc_scores.shape[1]
+    if val_dice_scores is not None:
+        assert len(val_dice_scores) == len(all_validation_losses)
+        num_auc_scores_per_timestep = val_dice_scores.shape[1]
         for auc_id in xrange(num_auc_scores_per_timestep):
-            ax2.plot(val_x_values, auc_scores[:, auc_id], linestyle=":", linewidth=4, markersize=10)
-            ax2_legend_text.append(auc_labels[auc_id])
+            ax2.plot(val_x_values, val_dice_scores[:, auc_id], linestyle=":", linewidth=4, markersize=10)
+            ax2_legend_text.append(dice_labels[auc_id])
 
     ax2.set_position([box.x0, box.y0, box.width * 0.8, box.height])
 
