@@ -51,8 +51,8 @@ Training the networks requires a GPU with at least 12 GB of VRAM. On a Pascal Ti
 3D UNet takes approx. 2 days.
 
 ```
-python run_training_2D.py -c FOLD -f CONFIG_FILE_2D
-python run_training_3D.py -c FOLD -f CONFIG_FILE_3D
+python run_training_2D.py -f FOLD -c CONFIG_FILE_2D
+python run_training_3D.py -f FOLD -c CONFIG_FILE_3D
 
 ```
 
@@ -62,16 +62,16 @@ UNet2D_config.py/UNet3D_config.py. You need to train all 5 folds for 2D and 3D U
 
 You can run the validation of the cross-validation like this:
 ```
-python run_validation_2D.py -c FOLD -f CONFIG_FILE_2D
-python run_validation_3D.py -c FOLD -f CONFIG_FILE_3D
+python run_validation_2D.py -f FOLD -c CONFIG_FILE_2D
+python run_validation_3D.py -f FOLD -c CONFIG_FILE_3D
 
 ```
 
 ### Test set prediction
 Change into the test_set direcory, then run
 ```
-python predict_test_2D_net.py -c FOLD -f CONFIG_FILE_2D
-python predict_test_3D_net.py -c FOLD -f CONFIG_FILE_3D
+python predict_test_2D_net.py -f FOLD -c CONFIG_FILE_2D
+python predict_test_3D_net.py -f FOLD -c CONFIG_FILE_3D
 
 ```
 
