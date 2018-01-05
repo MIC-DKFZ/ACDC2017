@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-__author__ = 'fabian'
 
 from lasagne.layers import InputLayer, DimshuffleLayer, ReshapeLayer, ConcatLayer, NonlinearityLayer, batch_norm, \
     ElemwiseSumLayer, DropoutLayer, Pool2DLayer, Upscale2DLayer

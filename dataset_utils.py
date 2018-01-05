@@ -73,19 +73,6 @@ def preprocess_image(itk_image, is_seg=False, spacing_target=(1, 0.5, 0.5), keep
     return image
 
 
-
-
-def get_split(all_keys, fold=0, num_splits=5, random_state=12345):
-    from sklearn.model_selection import KFold
-    splits = KFold(n_splits=num_splits, shuffle=True, random_state=random_state)
-    for i, (train_idx, test_idx) in enumerate(splits.split(all_keys)):
-        if i == fold:
-            train_keys = np.array(all_keys)[train_idx]
-            test_keys = np.array(all_keys)[test_idx]
-            break
-    return train_keys, test_keys
-
-
 def load_dataset(ids=range(101), root_dir="/home/fabian/drives/E132-Projekte/ACDC/new_dataset_preprocessed_for_2D_v2/"):
     with open(os.path.join(root_dir, "patient_info.pkl"), 'r') as f:
         patient_info = cPickle.load(f)
