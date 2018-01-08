@@ -49,7 +49,6 @@ def create_data_gen_train(patient_data_train, BATCH_SIZE, num_classes,
     data_gen_train = BatchGenerator_2D(patient_data_train, BATCH_SIZE, num_batches=None, seed=False,
                                        PATCH_SIZE=(352, 352))
 
-    # train transforms
     tr_transforms = []
     tr_transforms.append(Mirror((2, 3)))
     tr_transforms.append(RndTransform(SpatialTransform((352, 352), list(np.array((352, 352))//2),
@@ -61,7 +60,6 @@ def create_data_gen_train(patient_data_train, BATCH_SIZE, num_classes,
                                                        0, 0,
                                                        random_crop=False), prob=0.67,
                                       alternative_transform=RandomCropTransform((352, 352))))
-    #tr_transforms.append(ZeroMeanUnitVarianceTransform(True))
     tr_transforms.append(ConvertSegToOnehotTransform(range(num_classes), seg_channel=0, output_key='seg_onehot'))
 
     tr_composed = Compose(tr_transforms)
@@ -138,15 +136,10 @@ def run(config_file, fold=0):
     learning_rate = theano.shared(base_lr)
     updates = lasagne.updates.adam(T.grad(loss, params), params, learning_rate=learning_rate, beta1=0.9, beta2=0.999)
 
-    # create a convenience function to get the segmentation
-    seg_output = lasagne.layers.get_output(seg_layer, x_sym, deterministic=True, batch_norm_update_averages=False,
-                                           batch_norm_use_averages=False)
-
     dc = hard_dice(prediction_test, seg_sym.argmax(1), num_classes)
 
     train_fn = theano.function([x_sym, seg_sym], [loss, acc_train, loss_vec], updates=updates)
     val_fn = theano.function([x_sym, seg_sym], [loss_val, acc, dc])
-    # get_class_probas = theano.function([x_sym], prediction_test)
 
     dice_scores=None
     data_gen_train = create_data_gen_train(train_data, BATCH_SIZE,
@@ -184,7 +177,6 @@ def run(config_file, fold=0):
                                                    seeds=workers_seeds)  # new se has no brain mask
         epoch_start_time = time.time()
         learning_rate.set_value(np.float32(base_lr* lr_decay**epoch))
-        # class_weights = get_class_weights(class_frequencies, exp_schedule[epoch])
         print "epoch: ", epoch, " learning rate: ", learning_rate.get_value()
         train_loss = 0
         train_acc_tmp = 0
@@ -230,7 +222,7 @@ def run(config_file, fold=0):
             w = np.zeros(num_classes, dtype=np.float32)
             w[np.unique(seg.argmax(-1))] = 1
             loss, acc, dice = val_fn(data, seg)
-            dice[w==0] = 2
+            dice[w == 0] = 2
             all_dice.append(dice)
             val_loss += loss
             accuracies.append(acc)
