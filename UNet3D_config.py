@@ -170,7 +170,7 @@ class UNet3D_ACDC(SegmentationNetwork):
         ds1_ds2_sum_upscale_ds3_sum = ElemwiseSumLayer((ds1_ds2_sum_upscale, ds3_1x1_conv))
         ds1_ds2_sum_upscale_ds3_sum_upscale = Upscale3DLayer(ds1_ds2_sum_upscale_ds3_sum, (1, 2, 2))
 
-        self.seg_layer = l = seg_layer = ElemwiseSumLayer(
+        self.seg_layer = l = ElemwiseSumLayer(
             (net['output_segmentation'], ds1_ds2_sum_upscale_ds3_sum_upscale))
 
         net['dimshuffle'] = DimshuffleLayer(l, (0, 2, 3, 4, 1))

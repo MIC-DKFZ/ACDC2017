@@ -79,7 +79,6 @@ def run_validation(pred_fn, results_out_folder, use_patients, BATCH_SIZE=None, n
                         f.write("%s, %f\n" % (r, results[k][r]))
                     f.write("\n")
 
-            # pickle results as well
             with open(os.path.join(output_folder, "evaluation_metrics_%s.pkl" % tpe), 'w') as f:
                 cPickle.dump(results, f)
 
@@ -188,7 +187,7 @@ def run(config_file, fold=0):
     nt, net, seg_layer = cf.nt, cf.net, cf.seg_layer
     output_layer = seg_layer
 
-    best_epoch = 299# mn_dice.argmax()
+    best_epoch = 299
 
     results_out_folder = results_folder + "ep%03.0d_MA" % (best_epoch)
     if not os.path.isdir(results_out_folder):
