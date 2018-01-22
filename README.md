@@ -6,7 +6,7 @@ A preliminary version of our paper can be found here:
 https://arxiv.org/abs/1707.00587
 
 The challenge leaderboard is available here:
-http://acdc.creatis.insa-lyon.fr/#phase/5966175c6a3c770dff4cc4fb (login regquired, unfortunately)
+http://acdc.creatis.insa-lyon.fr/#phase/5966175c6a3c770dff4cc4fb (login required, unfortunately)
 
 ## How to use
 This code was cleaned up and made usable for external users, but is still what the authors would like to call 'messy'.
@@ -20,9 +20,9 @@ architecture files whereas UNet3D is object oriented. You don't need to deal wit
 networks and use our results.
 
 ### Prerequisites
-Our code is only compatible wit python 2.7. Running it with python 3 will need modifications.
+Our code is only compatible with python 2.7. Running it with python 3 will need modifications.
 
-We depend on some python packages which need to be installed by the user:
+We depend on some python packages which need to be installed by the user (may be incomplete):
 * theano
 * lasagne
 * SimpleITK
