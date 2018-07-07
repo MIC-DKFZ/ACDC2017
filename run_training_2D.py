@@ -30,7 +30,7 @@ from utils import get_split
 import imp
 from batchgenerators.dataloading import MultiThreadedAugmenter
 from batchgenerators.transforms import Compose, RndTransform
-from batchgenerators.transforms import SpatialTransform, Mirror
+from batchgenerators.transforms import SpatialTransform, MirrorTransform
 from batchgenerators.transforms import GammaTransform, ConvertSegToOnehotTransform
 from batchgenerators.transforms import RandomCropTransform
 
@@ -50,7 +50,7 @@ def create_data_gen_train(patient_data_train, BATCH_SIZE, num_classes,
                                        PATCH_SIZE=(352, 352))
 
     tr_transforms = []
-    tr_transforms.append(Mirror((2, 3)))
+    tr_transforms.append(MirrorTransform((2, 3)))
     tr_transforms.append(RndTransform(SpatialTransform((352, 352), list(np.array((352, 352))//2),
                                                        do_elastic_transform, alpha,
                                                        sigma,

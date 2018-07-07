@@ -24,7 +24,7 @@ from dataset_utils import load_dataset
 from utils import get_split
 from batchgenerators.dataloading import MultiThreadedAugmenter
 from batchgenerators.transforms import Compose, RndTransform
-from batchgenerators.transforms import SpatialTransform, Mirror
+from batchgenerators.transforms import SpatialTransform, MirrorTransform
 from batchgenerators.transforms import GammaTransform, ConvertSegToOnehotTransform
 from batchgenerators.transforms import RandomCropTransform, CutOffOutliersTransform
 from batchgenerators.transforms import ZeroMeanUnitVarianceTransform
@@ -197,7 +197,7 @@ def create_data_gen_train(patient_data_train, BATCH_SIZE, num_classes, patch_siz
     # train transforms
     tr_transforms = []
     tr_transforms.append(MotionAugmentationTransform(0.1, 0, 20))
-    tr_transforms.append(Mirror((3, 4)))
+    tr_transforms.append(MirrorTransform((3, 4)))
     tr_transforms.append(Convert3DTo2DTransform())
     tr_transforms.append(
         RndTransform(SpatialTransform(patch_size[1:], 112,
