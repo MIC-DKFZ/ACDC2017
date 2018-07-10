@@ -29,7 +29,7 @@ from batchgenerators.transforms import GammaTransform, ConvertSegToOnehotTransfo
 from batchgenerators.transforms import RandomCropTransform, CutOffOutliersTransform
 from batchgenerators.transforms import ZeroMeanUnitVarianceTransform
 from transformers import MotionAugmentationTransform, Convert3DTo2DTransform, Convert2DTo3DTransform
-
+from paths import results_folder, path_acdc_3d
 from SegmentationNetwork import SegmentationNetwork
 from lasagne.layers import Conv3DLayer, InputLayer, DimshuffleLayer, ReshapeLayer, DropoutLayer, \
     Upscale3DLayer, ElemwiseSumLayer, Pool3DLayer, ConcatLayer, batch_norm
@@ -252,7 +252,7 @@ def get_train_val_generators(fold):
     return data_gen_train, data_gen_validation
 
 
-dataset = load_dataset(root_dir=os.environ['PATH_ACDC_3D'])
+dataset = load_dataset(root_dir=path_acdc_3d)
 split_seed = 12345
 
 np.random.seed(65432)
@@ -263,9 +263,9 @@ INPUT_PATCH_SIZE = (10, 224, 224)
 num_classes = 4
 num_input_channels = 1
 EXPERIMENT_NAME = "UNet3D_final"
-if not os.path.isdir(os.path.join(os.environ['RESULTS_FOLDER'], "ACDC_lasagne")):
-    os.mkdir(os.path.join(os.environ['RESULTS_FOLDER'], "ACDC_lasagne"))
-results_dir = os.path.join(os.environ['RESULTS_FOLDER'], "ACDC_lasagne", EXPERIMENT_NAME)
+if not os.path.isdir(os.path.join(results_folder, "ACDC_lasagne")):
+    os.mkdir(os.path.join(results_folder, "ACDC_lasagne"))
+results_dir = os.path.join(results_folder, "ACDC_lasagne", EXPERIMENT_NAME)
 
 if not os.path.isdir(results_dir):
     os.mkdir(results_dir)
