@@ -8,6 +8,9 @@ https://arxiv.org/abs/1707.00587
 The challenge leaderboard is available here:
 http://acdc.creatis.insa-lyon.fr/#phase/5966175c6a3c770dff4cc4fb (login required, unfortunately)
 
+### Windows is not supported!
+Batchgenerators (which we use in training) do not work with Windows yet, so you won't be able to run the training if you are on Windows. Sorry for the inconvenience
+
 ## How to use
 This code was cleaned up and made usable for external users, but is still what the authors would like to call 'messy'.
 As you can imagine, a challenge deadline will lead to very rapid code development in the very end which ultimately 
